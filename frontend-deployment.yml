@@ -1,5 +1,3 @@
-#This file contain Deployment + Sevice file also avilable in it
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,11 +11,13 @@ spec:
     metadata:
       labels:
         app: frontend
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2023-10-01T12:00:00Z"  # Force rollout
     spec:
       containers:
         - name: frontend
-          image: sanketnalage/frontend:latest
-          imagePullPolicy: Always 
+          image: sanketnalage/frontend:v1.0.1  # Use a unique tag
+          imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
