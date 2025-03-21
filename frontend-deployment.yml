@@ -17,6 +17,7 @@ spec:
       containers:
         - name: frontend
           image: sanketnalage/frontend:latest
+          imagePullPolicy: Always 
 ---
 apiVersion: v1
 kind: Service
