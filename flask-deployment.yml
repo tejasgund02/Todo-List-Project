@@ -17,7 +17,6 @@ spec:
       containers:
         - name: flask-backend
           image: sanketnalage/backend:latest
-          imagePullPolicy: IfNotPresent
           env:
             - name: POSTGRES_DB
               value: "todolist"
