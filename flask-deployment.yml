@@ -34,10 +34,10 @@ kind: Service
 metadata:
   name: flask-backend
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
     - port: 5000
       targetPort: 5000
-      protocol: TCP
+      nodePort: 30000  # Explicitly define the NodePort
   selector:
     app: flask-backend
