@@ -1,6 +1,8 @@
+
+
 # 📌 3-Tier To-Do List Application
 
-🚀 A containerized To-Do List application deployed on Kubernetes using a 3-tier architecture: **Frontend (Nginx), Backend (Flask API), and Database (PostgreSQL)**. Managed with **Docker** and **Kubernetes (KIND Cluster)**.
+🚀 A containerized To-Do List application deployed on Kubernetes using a **3-tier architecture**: **Frontend (Nginx), Backend (Flask API), and Database (PostgreSQL)**. Managed with **Docker**, **Kubernetes (KIND Cluster)**, **Jenkins CI/CD**, **SonarQube**, **ArgoCD**, and **Prometheus**.
 
 ---
 
@@ -61,117 +63,56 @@ Your system follows a **3-tier architecture**:
 
 ---
 
-### 🛠️ Setup & Deployment
-1️⃣ **Clone the Repository**
-```sh
+## 🛠️ Setup & Deployment
+
+### 1️⃣ **Clone the Repository**
+```bash
 git clone https://github.com/SanketNalage/Kubernetes-Hand-on/tree/main/todo-list-main.git
 cd todo-app
 ```
 
 ---
-
-## 🚀 Getting Started
-
-### 🔧 Prerequisites
-Ensure you have the following installed:
-- [Docker](https://www.docker.com/)
-- [Kubernetes (kubectl)](https://kubernetes.io/docs/tasks/tools/)
-- [KIND (Kubernetes in Docker)](https://kind.sigs.k8s.io/)
-
----
-
-# 🚀 Deploying a To-Do List App on KIND Cluster
+## 🚀 CI/CD Pipeline with Jenkins
+### Jenkins Setup
+***Install Jenkins on your server or local machine.***
+Install required plugins:
+Docker
+Kubernetes
+Git
+SonarQube Scanner
 
 ---
 
-## 📌 1️⃣ **Login to Docker**
-```sh
-docker login
-```
+### **Read the Jenkinsfile in Backend and Frontend**
+
+📌 **Backend Jenkinsfile** → Backend CI/CD Pipeline  
+<img src="./images/backend-jenkins.png" alt="Backend CI/CD Pipeline" width="500" height="300">
+
+📌 **Frontend Jenkinsfile** → Frontend CI/CD Pipeline  
+<img src="./images/frontend-jenkins.png" alt="Frontend CI/CD Pipeline" width="500" height="300">
+---
+
+## 🚀 **Orchestration with ArgoCD**
+
+ArgoCD is a **declarative, GitOps continuous delivery tool** for Kubernetes. It automates the deployment of applications by syncing the desired state defined in Git repositories with the live state in your Kubernetes cluster. With ArgoCD, you can:
+
+- **Automate Deployments**: Ensure your applications are always in the desired state.
+- **Version Control**: Track changes to your Kubernetes manifests in Git.
+- **Rollback**: Easily revert to a previous state if something goes wrong.
+- **Visualization**: Monitor and manage your deployments via the ArgoCD UI.
+
+ArgoCD is integrated into this project to manage the deployment of the **To-Do List Application** seamlessly.
 
 ---
 
-## 🔧 2️⃣ **Build and Push Backend Image**
-```sh
-docker build -t backend .
-docker images
-docker tag backend:latest sanketnalage/backend:latest
-docker push sanketnalage/backend
-```
+### **How to Use ArgoCD**
+1. Install ArgoCD in your Kubernetes cluster.
+2. Define your application manifests in a Git repository.
+3. Create an ArgoCD application to sync the Git repository with your cluster.
+4. Monitor and manage deployments via the ArgoCD UI or CLI.
 
----
+📌 **ARGOCD:**  
+<img src="./images/argocd.png" alt="argocd" width="500" height="300">
 
-## 🎨 3️⃣ **Build and Push Frontend Image**
-```sh
-docker build -t frontend .
-docker tag frontend:latest sanketnalage/frontend:latest
-docker push sanketnalage/frontend
-```
 
----
 
-## 📦 4️⃣ **Create the KIND Cluster**
-```sh
-kind create cluster --config=config.yml
-```
-
-## 📦 5️⃣ **Load Docker Images into KIND Cluster**
-```sh
-kind load docker-image sanketnalage/backend:latest --name todo-cluster
-kind load docker-image sanketnalage/frontend:latest --name todo-cluster
-```
-
----
-
-## 🔍 6️⃣ **Verify Loaded Images in KIND**
-### 🖥️ Access the Node's Shell
-```sh
-docker exec -it todo-cluster-control-plane bash
-```
-### 📜 List Loaded Images
-```sh
-crictl images
-```
-**✅ Expected Output:**
-```
-docker.io/sanketnalage/backend                  latest               0c77f39c943db       401MB
-docker.io/sanketnalage/frontend                 latest               bf4828882f2de       49.3MB
-```
-
----
-
-## 🚀 7️⃣ **Apply Kubernetes Manifests**
-```sh
-kubectl apply -f kubernetes/postgres-deployment.yml
-kubectl apply -f flask-deployment.yml
-kubectl apply -f frontend-deployment.yml
-```
-
----
-
----
-## Enter in the postgersql database and create the table run the command single order.
-```sh
-kubectl exec -it postgres-0 -- bash
-psql -U youruser -d todolist
-```
-```sh
-CREATE TABLE tasks (
-    id SERIAL PRIMARY KEY,
-    description TEXT NOT NULL
-);
-```
-
-## 🚀 8️⃣ **Check Running Services**
-
-```sh
-kubectl get pods
-kubectl get svc
-```
-## 🚀 9️⃣ **Do the port-forwarding to run the app**
-```sh
-sudo -E kubectl port-forward svc/flask-backend 30000:5000
-```
----
-
-🎉 **Congratulations! Your To-Do List app is now deployed on your KIND cluster!** 🎉
